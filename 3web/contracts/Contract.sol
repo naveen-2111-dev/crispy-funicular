@@ -10,7 +10,7 @@ contract CrowdFunding{
         string description;
         uint256 target;
         uint256 deadline;
-        uint256 amountcollected;
+        uint256 amountCollected;
         string image;
         address[] donators;
         uint256[] donations;
@@ -18,10 +18,10 @@ contract CrowdFunding{
 
     mapping(uint256 => Campaign) public campaigns;
 
-    uint256 public  numberofcampaigns = 0;
+    uint256 public  numberOfCampaigns = 0;
 
-    function createcampaign(address _owner,string memory _title,string memory _description,uint256 _target,uint256 _deadline,string memory _image) public returns(uint256) {
-        Campaign storage campaign = campaigns[numberofcampaigns];
+    function createCampaign(address _owner,string memory _title,string memory _description,uint256 _target,uint256 _deadline,string memory _image) public returns(uint256) {
+        Campaign storage campaign = campaigns[numberOfCampaigns];
 
         require(campaign.deadline < block.timestamp, "The deadline should be a date in future.");
 
@@ -30,15 +30,15 @@ contract CrowdFunding{
         campaign.description = _description;
         campaign.target = _target;
         campaign.deadline = _deadline;
-        campaign.amountcollected = 0;
+        campaign.amountCollected = 0;
         campaign.image = _image;
 
-        numberofcampaigns++;
+        numberOfCampaigns++;
 
-        return numberofcampaigns - 1;
+        return numberOfCampaigns - 1;
     }
 
-    function donatetocampaign(uint256 _id) public payable {
+    function donateToCampaign(uint256 _id) public payable {
         uint256 amount = msg.value;
 
         Campaign storage campaign = campaigns[ _id];
@@ -49,7 +49,7 @@ contract CrowdFunding{
         (bool sent,) = payable(campaign.owner).call{value: amount}("");
 
         if(sent) {
-            campaign.amountcollected = campaign.amountcollected + amount;
+            campaign.amountCollected = campaign.amountCollected + amount;
         }
     }
 
@@ -58,15 +58,15 @@ contract CrowdFunding{
     }
 
     function getcampaigns() public view returns (Campaign[] memory){
-        Campaign[] memory allcampaigns = new Campaign[](numberofcampaigns);
+        Campaign[] memory allCampaigns = new Campaign[](numberOfCampaigns);
 
-        for(uint i=0 ; i < numberofcampaigns ; i++) {
+        for(uint i=0 ; i < numberOfCampaigns ; i++) {
             Campaign storage item = campaigns[i];
 
-            allcampaigns[i] = item;
+            allCampaigns[i] = item;
         }
 
-        return allcampaigns;
+        return allCampaigns;
     }
     
 }
